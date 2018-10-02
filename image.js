@@ -1,59 +1,26 @@
-let zip = (matrix) => {
-    let lines = matrix.length;
-    let columns = matrix[0].length;
-    let matrixCompact = [];
-    let pointer, numOfBlack, numOfWhite;
-    for (let i = 0; i < lines; i++) {
-        pointer = 0;
-        numOfBlack = 0;
-        numOfWhite = 0;
-        matrixCompact[i] = [];
-        for (let j = 0; j < columns; j++) {
-            if (j === 0) {
-                if (matrix[i][j] === 0) {
-                    matrixCompact[i][pointer] = 0;
-                    pointer++;
-                    numOfBlack++;
-                } else {
-                    numOfWhite++;
-                }
+let zip = (mat) => {
+    var compressed = [];
+    
+    mat.forEach(row => {
+       var running_element = 1;
+        var current_count = 0;
+        var new_row = [];
+        
+        row.forEach(element => {
+            if (element !== running_element) {
+                new_row.push(current_count);
+                current_count = 1;
+                running_element = element;
+            } else {
+                current_count += 1;
             }
-            else {
-                if (matrix[i][j] === 0) {
-                    if (matrix[i][j - 1] === 1) {
-                        matrixCompact[i][pointer] = numOfWhite;
-                        numOfWhite = 0;
-                        numOfBlack++;
-                        pointer++;
-                        if (j === columns - 1) {
-                            matrixCompact[i][pointer] = numOfBlack;
-                        }
-                    } else {
-                        numOfBlack++;
-                        if(j===columns -1){
-                            matrixCompact[i][pointer] = numOfBlack;
-                        }
-                    }
-                } else {
-                    if (matrix[i][j - 1] === 0 && j!==1) {
-                        matrixCompact[i][pointer] = numOfBlack;
-                        numOfBlack = 0;
-                        numOfWhite++;
-                        pointer++;
-                        if (j === columns - 1) {
-                            matrixCompact[i][pointer] = numOfWhite;
-                        }
-                    } else {
-                        numOfWhite++;
-                        if (j === columns - 1) {
-                            matrixCompact[i][pointer] = numOfWhite;
-                        }
-                    }
-                }
-            }
-        }
-    }
-    return matrixCompact;
+        });
+        
+        new_row.push(current_count);
+        compressed.push(new_row);
+    });
+    
+    return compressed;
 };
 
 var unzip = (matrixCompact) => {
